@@ -10,4 +10,9 @@ export default defineConfig({
   external: [
     'vscode',
   ],
+  noExternal: [
+    'ohmyfetch',
+    'opentype.js',
+    'wawoff2',
+  ],
 });
