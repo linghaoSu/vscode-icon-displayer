@@ -4,8 +4,8 @@
     "email": "slh001@live.cn",
     "name": "linghao.su"
   },
-  "name": "vscode-ext-sample",
-  "displayName": "VSCode Template Sample",
+  "name": "vscode-icon-displayer",
+  "displayName": "VSCode Icon Displayer",
   "version": "0.0.1",
   "packageManager": "pnpm@7.0.1",
   "description": "",
@@ -13,7 +13,7 @@
   "main": "./dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/linghaoSu/i18n-auto-replace"
+    "url": "https://github.com/linghaoSu/vscode-icon-displayer"
   },
   "files": [
     "dist"
@@ -35,8 +35,15 @@
     "typecheck": "tsc --noEmit",
     "vscode:prepublish": "pnpm build"
   },
+  "dependencies": {
+    "opentype.js": "^1.3.4",
+    "ohmyfetch": "^0.4.21",
+    "wawoff2": "^2.0.1"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
+    "@types/opentype.js": "^1.3.4",
+    "@types/wawoff2": "1.0.0",
     "@babel/types": "^7.18.4",
     "@types/node": "^17.0.41",
     "@types/vscode": "^1.68.0",
@@ -53,31 +60,30 @@
   },
   "contributes": {
     "configuration": {
-      "title": "sample-ext",
+      "type": "object",
+      "title": "IconDisplayer",
       "properties": {
-        "i18n-auto-replace.ext": {
-          "type": "array",
-          "default": [
-            "vue"
+        "vscode-icon-displayer.iconUrl": {
+          "type": "string",
+          "description": "The url of the icon font file",
+          "default": "https://cdn.jsdelivr.net/npm/@dao-style/core@latest/dist/font/DaoCloudIconFont/DaoCloudIconFont.woff2"
+        },
+        "vscode-icon-displayer.styleUrl": {
+          "type": "string",
+          "description": "The url of the icon font css file",
+          "default": "https://cdn.jsdelivr.net/npm/@dao-style/core@latest/dist/style.css"
+        },
+        "vscode-icon-displayer.mode": {
+          "type": "string",
+          "enum": [
+            "enable",
+            "disable",
+            "auto"
           ],
-          "description": "这里是一个描述，但这个区域用来描述配置信息，写在 settings 里的，可以设置为枚举类型或是别的，也可以提供默认值"
+          "default": "auto",
+          "description": "enable: always show icon\n\ndisable: never show icon\n\nauto: show icon when the file is not a text file"
         }
       }
-    },
-    "commands": [
-      {
-        "command": "sample-ext.sample-command",
-        "title": "注册命令用，可以绑定在快捷键上，可以 cmd+shift+p 后输入选中使用"
-      }
-    ],
-    "menus": {
-      "explorer/context": [
-        {
-          "command": "sample-ext.sample-command",
-          "title": "这里在文件目录的区域注册右键菜单，可以调用上面注册的命令",
-          "group": "sample-ext"
-        }
-      ]
     }
   }
 }
