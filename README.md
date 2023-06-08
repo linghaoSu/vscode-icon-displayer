@@ -11,7 +11,9 @@ Display icon font in `@dao-style/core` in VSCode.
 ## TODO
 - [ ] support config local icon font path
 - [ ] support config style for display icon font
-- [ ] support icon name completion
+- [x] support icon name completion
+- [ ] support command to clear local font svg cache
+- [ ] support command to restart extension
 
 
 ## License

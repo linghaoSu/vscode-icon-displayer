@@ -1,5 +1,5 @@
-import type { DecorationOptions, ExtensionContext, TextDocument, TextEditorDecorationType } from 'vscode';
-import { OverviewRulerLane, Range, Uri, commands, window, workspace } from 'vscode';
+import type { DecorationOptions, DecorationRenderOptions, ExtensionContext, Position, TextDocument, TextEditorDecorationType } from 'vscode';
+import { CompletionItem, CompletionItemKind, MarkdownString, OverviewRulerLane, Range, SnippetString, Uri, commands, languages, window, workspace } from 'vscode';
 import { fetch } from 'ohmyfetch';
 import openType from 'opentype.js';
 import { decompress } from 'wawoff2';
@@ -15,6 +15,7 @@ const state = {
 
 const fontSize = workspace.getConfiguration('editor').get('fontSize');
 const decorationMap = new Map<string, TextEditorDecorationType>();
+const decorationOptionsMap = new Map<string, DecorationRenderOptions>();
 
 const getSvgFile = async (iconName: string, context: ExtensionContext) => {
   const svgPath = Uri.joinPath(context.globalStorageUri, EXT_NAME, `${iconName}.svg`);
@@ -64,7 +65,7 @@ const createDecoration = async (iconName: string, context: ExtensionContext) => 
   }
 
   const filePath = Uri.file(svgUri.fsPath);
-  return window.createTextEditorDecorationType({
+  const options = {
     overviewRulerLane: OverviewRulerLane.Right,
     before: {
       borderColor: '#f00',
@@ -87,7 +88,10 @@ const createDecoration = async (iconName: string, context: ExtensionContext) => 
         color: 'blue',
       },
     },
-  });
+  };
+
+  decorationOptionsMap.set(iconName, options);
+  return window.createTextEditorDecorationType(options);
 };
 
 const getDecoration = async (iconName: string, context: ExtensionContext) => {
@@ -333,6 +337,52 @@ export async function activate(context: ExtensionContext) {
     disposeAllDecorations();
     triggerUpdateDecorations();
   });
+
+  // register completion provider
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      { scheme: 'file' },
+      {
+        async provideCompletionItems(document: TextDocument, position: Position) {
+          const linePrefix = document.lineAt(position).text.substr(0, position.character);
+
+          if (!linePrefix.endsWith('icon-')) {
+            return undefined;
+          }
+
+          const completionList = await Promise.all(Array.from(state.iconNameUnicodeMap.entries()).map(async ([iconName, unicode]) => {
+            const item = new CompletionItem(iconName, CompletionItemKind.Constant);
+            const rst = await getDecoration(iconName, context);
+            if (!rst) {
+              return false;
+            }
+
+            const decoration = decorationOptionsMap.get(iconName);
+
+            if (decoration?.after?.contentIconPath) {
+              const contentIconPath = decoration?.after?.contentIconPath;
+              const md = new MarkdownString();
+              md.supportHtml = true;
+              const url = (contentIconPath as Uri).toString();
+
+              md.appendMarkdown(`![${iconName}](${url})`);
+
+              item.documentation = md;
+              item.label = {
+                label: iconName,
+              };
+            }
+
+            item.insertText = new SnippetString(iconName.slice(5));
+            return item;
+          }).filter(item => item));
+
+          return completionList as CompletionItem[];
+        },
+      },
+      '-',
+    ),
+  );
 }
 
 // process exit;
