@@ -31,7 +31,7 @@
     "test": "vitest",
     "build": "tsup src/index.ts --external vscode",
     "release": "bumpp --commit --push --tag",
-    "publish": "vsce publish --no-dependencies",
+    "publish": "vsce publish",
     "typecheck": "tsc --noEmit",
     "vscode:prepublish": "pnpm build"
   },
