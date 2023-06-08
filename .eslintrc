@@ -3,7 +3,19 @@
   "rules": {
     "semi": "off",
     "@typescript-eslint/semi": [ "error", "always" ],
-    "curly": [ "error", "all" ]
+    "curly": [ "error", "all" ],
+    "@typescript-eslint/brace-style": [ "error", "1tbs" ],
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+        "delimiter": "semi",
+        "requireLast": true
+      },
+      "singleline": {
+        "delimiter": "semi",
+        "requireLast": false
+      },
+      "multilineDetection": "brackets"
+    }]
   },
   "overrides": [
     {

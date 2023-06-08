@@ -1,11 +1,18 @@
-# VSCode Ext Template
+# VSCode Icon Displayer
 
-<a href="https://marketplace.visualstudio.com/items?itemName=linghaosu.ext-sample" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/v/linghaosu.ext-sample.svg?color=eee&amp;label=VS%20Code%20Marketplace&logo=visual-studio-code" alt="Visual Studio Marketplace Version" /></a>
+<a href="https://marketplace.visualstudio.com/items?itemName=linghaosu.vscode-icon-displayer" target="__blank"><img src="https://img.shields.io/visual-studio-marketplace/v/linghaosu.vscode-icon-displayer.svg?color=eee&amp;label=VS%20Code%20Marketplace&logo=visual-studio-code" alt="Visual Studio Marketplace Version" /></a>
 
 
 ## description
 
-This is a extension sample (template), used for quick setup a project.
+Display icon font in `@dao-style/core` in VSCode.
+
+
+## TODO
+[ ] support config local icon font path
+[ ] support config style for display icon font
+[ ] support icon name completion
+
 
 ## License
 

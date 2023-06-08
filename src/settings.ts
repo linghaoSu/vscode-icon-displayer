@@ -3,14 +3,17 @@ import { EXT_NAME } from './constant';
 
 let disposeHandler: Disposable | undefined;
 
-interface SettingInterfaceSample {
-  sampleSettings?: string
+interface SettingInterface {
+  iconUrl?: string;
+  iconStyle?: {
+    color?: string;
+  };
 }
 
-type SettingType = SettingInterfaceSample;
+type SettingType = SettingInterface;
 
 const defaultSettings: SettingType = {
-  sampleSettings: '',
+  iconUrl: '',
 };
 
 const currentSettings: SettingType = {
@@ -25,6 +28,8 @@ export function initialSetting() {
   if (disposeHandler) {
     disposeSettingListener();
   }
+
+  applyChange(workspace.getConfiguration(EXT_NAME) as SettingType);
 
   disposeHandler = workspace.onDidChangeConfiguration(async (e) => {
     const isChanged = await e.affectsConfiguration(EXT_NAME);
